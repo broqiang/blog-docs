@@ -1,4 +1,12 @@
-# httprouter 源码分析 
++++
+title = "httprouter 源码分析"
+author = "BroQiang"
+github_url = "https://broqiang.com/broqiang"
+head_img = ""
+created_at = "2019-04-17 01:05:48"
+created_at = "2019-04-17 01:05:48"
+tags = ["go", "源码分析"]
++++
 
 关于 [httprouter](https://github.com/julienschmidt/httprouter) 本身就不过多说了，可以直接去查看源码及 README 。
 
@@ -150,12 +158,12 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
             handle(w, req, ps)
             // 处理完成后 return ，此次生命周期就结束了
             return
-            
+
             // 当没有找到的时候，并且请求的方法不是 CONNECT 并且 路径不是 / 的时候 
         } else if req.Method != "CONNECT" && path != "/" {
             // 这里就要做重定向处理， 默认是 301
             code := 301 // Permanent redirect, request with GET method
-            
+
             // 如果请求的方式不是 GET 就将 http 的响应码设置成 307
             if req.Method != "GET" {
                 // Temporary redirect, request with same method
@@ -179,7 +187,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
                     // 实际访问的是 '/foo'， 将 /foo 重定向到 /foo/
                     req.URL.Path = path + "/"
                 }
-                
+
                 // 将处理过的路由重定向， 这个是一个 http 标准包里面的方法
                 http.Redirect(w, req, req.URL.String(), code)
                 return
@@ -250,7 +258,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
         // router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         //         w.Write([]byte("什么都没有找到"))
         // })
-        // 
+        //
         r.NotFound.ServeHTTP(w, req)
     } else {
         // 如果没有定义，就返回一个 http 标准库的  NotFound 函数，返回一个 404 page not found
@@ -324,7 +332,7 @@ func (r *Router) Handle(method, path string, handle Handle) {
     // 因为路由是一个基数树，全部是从根节点开始，如果第一次调用注册方法的时候跟是不存在的，
     // 就注册一个根节点， 这里是每一种请求方法是一个根节点，会存在多个树。
     root := r.trees[method]
-    
+
     // 根节点存在就直接调用，不存在就初始化一个
     if root == nil {
         // 需要注意的是，这里使用的 new 来初始化，所以 root 是一个指针。
@@ -412,7 +420,6 @@ func (r *Router) ServeFiles(path string, root http.FileSystem) {
 
 到这里 httprouter 的基本路由处理已经读完，在不考虑性能的情况下，完全可以模仿这个来实现一个自己的路由了。如果是一个小的服务，没有几个路由，其实完全不用考虑，没必要使用树，直接一个 map 就可以了。标准库的 ServeMux 中的 muxEntry 也只有简单的两个字段（所以支持的功能比较少）。
 
-
 ## Radix tree
 
 这个就是这个路由号称最快的关键部分（这个没去核实过，也不用去纠结）。开始读源代码前，先了解下原理（这个就是之前一直没去读源码的原因），详细见官方给的说明： [How does it work?](https://github.com/julienschmidt/httprouter#how-does-it-work)
@@ -482,31 +489,31 @@ type node struct {
     // 然后 children 中会有 path 为 [s, blog ...] 等的节点 
     // 然后 s 还有 children node [earch,upport] 等，就不再说明了
     path      string
-    
+
     // 判断当前节点路径是不是含有参数的节点, 上图中的 :post 的上级 blog 就是wildChild节点
     wildChild bool
-    
+
     // 节点类型: static, root, param, catchAll
     // static: 静态节点, 如上图中的父节点 s （不包含 handler 的)
     // root: 如果插入的节点是第一个, 那么是root节点
     // catchAll: 有*匹配的节点
     // param: 参数节点，比如上图中的 :post 节点
     nType     nodeType
-    
+
     // path 中的参数最大数量，最大只能保存 255 个（超过这个的情况貌似太难见到了）
     // 这里是一个非负的 8 进制数字，最大也只能是 255 了
     maxParams uint8
-    
+
     // 和下面的 children 对应，保留的子节点的第一个字符
     // 如上图中的 s 节点，这里保存的就是 eu （earch 和 upport）的首字母 
     indices   string
-    
+
     // 当前节点的所有直接子节点
     children  []*node
-    
+
     // 当前节点对应的 handler
     handle    Handle
-    
+
     // 优先级，查找的时候会用到,表示当前节点加上所有子节点的数目
     priority  uint32
 }
@@ -618,7 +625,7 @@ func (n *node) addRoute(path string, handle Handle) {
                     // 比如： :post/ ，只要是参数节点，必有子节点，哪怕是
                     // blog/:post 这种，也有一个 / 的子节点
                     n = n.children[0]
-                    
+
                     // 又插入了一个节点，权限再次 + 1
                     n.priority++
 
@@ -810,7 +817,7 @@ func (n *node) incrementChildPrio(pos int) int {
 
     // 调整位置（向前移动）
     newPos := pos
-    
+
     // 这里的操作就是将 pos 位置的子节点移动到最前面，增加优先级，比如：
     // 原本的节点是 [a, b, c, d], 传入的是 2 ,就变成 [c, a, b, d]
     // 这只是个示例，实际情况还要考虑 n.children[newPos-1].priority < prio ，不一定是移动全部
@@ -859,7 +866,7 @@ func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle
     // 只要不是通配符开头的就不做处理，证明这个路由是没有参数的路由
     for i, max := 0, len(path); numParams > 0; i++ {
         c := path[i]
-        
+
         // 如果不是 : 或 * 跳过本次循环，不做任何处理
         if c != ':' && c != '*' {
             continue
@@ -910,12 +917,12 @@ func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle
                 nType:     param,
                 maxParams: numParams,
             }
-            
+
             // 用新定义的子节点初始化一个 children 属性
             n.children = []*node{child}
             // 标记上当前这个节点是一个包含参数的节点的节点
             n.wildChild = true
-            
+
             // 将新创建的节点定义为当前节点，这个要想一下，到这里这种操作已经有不少了
             // 因为一直都是指针操作，修改都是指针的引用，所以定义好的层级关系不会被改变
             n = child
@@ -940,15 +947,15 @@ func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle
                     maxParams: numParams,
                     priority:  1,
                 }
-                
+
                 // 将初始化的子节点赋值给当前节点
                 n.children = []*node{child}
-                
+
                 // 当前节点又变成了新的子节点（到此时的 n 的身份已经转变了几次了，看这段代表的时候
                 // 脑中要有一颗树，实在想不出来的话可以按照开始的图的结构，将节点的变化记录到一张纸上，
                 // 然后将每一次的转变标记出来，就完全能明白了）
                 n = child
-                
+
                 // 如果进入倒了这个 if ，执行到这里，就还会进入到下一次循环，将可能生成出来的参数再次去匹配
             }
 
@@ -1056,8 +1063,7 @@ walk: // outer loop for walking the tree
                             continue walk
                         }
                     }
-                    
-                    
+
                     // 如果进入到了这里，代表没有找到对应的子节点
 
                     // 如果寻找路径正好是 / ，因为去除了公共路径
@@ -1066,7 +1072,7 @@ walk: // outer loop for walking the tree
                     // 调用者就知道可以将路由重定向到 /hello 了，下次再来就可以找到这个路由了
                     // 可以去 Router.ServeHTTP 方法看下，是不是会发起一个重定向
                     tsr = (path == "/" && n.handle != nil)
-                    
+
                     // 返回，此时会返回 (nil,[],true|false) 这 3 个值
                     return
                 }

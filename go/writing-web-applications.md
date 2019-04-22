@@ -1,32 +1,20 @@
++++
+title = "Go 编写 Web 应用"
+author = "BroQiang"
+github_url = "https://broqiang.com/broqiang"
+head_img = ""
+created_at = "2019-04-02 22:54:51"
+updated_at = "2019-04-02 22:54:51"
+tags = ["go", "翻译"]
++++
+
 这是一篇官方的 [Writing Web Applications](https://golang.org/doc/articles/wiki) 的翻译
 
 如果 `golang.org` 打不开的话，可以把所有链接中的 `golang.org` 更换成 `golang.google.cn` ，这是一个官方的国内镜像，和 `golang.org` 的内容是一致的。
 
-<!-- TOC -->
-
-- [简介](#简介)
-    - [本教程包含下面内容](#本教程包含下面内容)
-    - [需要已经掌握下面知识](#需要已经掌握下面知识)
-- [入门](#入门)
-- [数据结构](#数据结构)
-- [net http 包简介](#net-http-包简介)
-- [使用 net http 去服务 wiki 页面](#使用-net-http-去服务-wiki-页面)
-- [编辑页面](#编辑页面)
-- [html template 包](#html-template-包)
-- [处理不存在的页面](#处理不存在的页面)
-- [保存页面](#保存页面)
-- [错误处理](#错误处理)
-- [模板缓存](#模板缓存)
-- [验证](#验证)
-- [函数文字和闭包简介](#函数文字和闭包简介)
-- [试试看](#试试看)
-- [其他任务](#其他任务)
-
-<!-- /TOC -->
-
 ## 简介
 
-#### 本教程包含下面内容
+### 本教程包含下面内容
 
 * 通过 load 与 save 方法创建数据结构
 
@@ -38,7 +26,7 @@
 
 * 使用闭包
 
-#### 需要已经掌握下面知识
+### 需要已经掌握下面知识
 
 * 编程经验
 
@@ -46,8 +34,7 @@
 
 * 会一些简单 UNIX/DOS 命令行
 
-
-##  入门
+## 入门
 
 现在，你可以在 FreeBSD, Linux, OS X, 或 Windows 上运行 Go ， 我们使用 `$` 代表命令行的提示符， `$` 开始的内容是输入的命令。
 
@@ -56,9 +43,9 @@
 在 GOPATH 中为这个项目创建一个新的目录，然后切换到这个目录(cd)
 
 ```bash
-$ cd $GOPATH/src
-$ mkdir gowiki
-$ cd go wiki
+cd $GOPATH/src
+mkdir gowiki
+cd go wiki
 ```
 
 创建一个文件 `wiki.go` ， 用你喜欢的编辑器打开它，用添加下面内容
@@ -153,15 +140,14 @@ func main() {
 你可以像这样编译并运行这个程序：
 
 ```bash
-$ go build wiki.go 
-$ ./wiki 
+$ go build wiki.go
+$ ./wiki
 This is a simple Page.
 ```
 
 （如果你使用的是 Windows ，你必须输入 `wiki` ，去掉 `./` 去执行这个程序）
 
 [点击这里去查看我们到现在写的代码](https://golang.org/doc/articles/wiki/part1.go)
-
 
 ## net http 包简介
 
@@ -200,25 +186,23 @@ http.Request 是表示客户端 HTTP 请求的数据结构。 r.URL.Path 是一�
 
 如果你运行程序，并访问这个地址：
 
-```
-http://localhost:8080/monkeys
-```
+`http://localhost:8080/monkeys`
 
 程序将会显示包含下面内容的页面：
 
-```
-Hi there, I love monkeys!
-```
+`Hi there, I love monkeys!`
 
 ## 使用 net http 去服务 wiki 页面
 
-要想使用 net/http 包，它必须被导入： 
+要想使用 net/http 包，它必须被导入：
 
+```go
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
+    "fmt"
+    "io/ioutil"
+    "net/http"
 )
+```
 
 我们来创建一个叫 viewHandler 的 handler， 用户可以通过它去查看 wiki 页面。它将去处理包含前缀 `/view/` 的 URL 。
 
@@ -304,9 +288,9 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 
 ```go
 import (
-	"html/template"
-	"io/ioutil"
-	"net/http"
+    "html/template"
+    "io/ioutil"
+    "net/http"
 )
 ```
 
@@ -590,6 +574,7 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string)
 
 ```go
 func makeHandler(fn func (http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
+
 	return func(w http.ResponseWriter, r *http.Request) {
         // 这里将从 Request 中提取 title
 		// 并且调用提供的 handler 'fn'
@@ -671,8 +656,8 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 重新编译代码并运行它：
 
 ```bash
-$ go build wiki.go
-$ ./wiki
+go build wiki.go
+./wiki
 ```
 
 访问 [http://localhost:8080/view/ANewPage](http://localhost:8080/view/ANewPage) 将显示页面编辑表单, 你应该可以输入一些文本，点击 `save`，然后会重定向到新创建的页面。
