@@ -1,11 +1,12 @@
 +++
 title = "Go 编写 Web 应用"
 author = "BroQiang"
-github_url = "https://broqiang.com/broqiang"
+home_page = "https://broqiang.com"
 head_img = ""
-created_at = "2019-04-02 22:54:51"
-updated_at = "2019-04-02 22:54:51"
+created_at = 2019-04-02T22:54:51
+updated_at = 2019-04-02T22:54:51
 tags = ["go", "翻译"]
+description = "这是一篇官方的 https://golang.org/doc/articles/wiki 的翻译， 描述了怎样使用 go 的 http 包快速创建一个 web 应用"
 +++
 
 这是一篇官方的 [Writing Web Applications](https://golang.org/doc/articles/wiki) 的翻译
@@ -74,7 +75,7 @@ type Page struct {
 
 类型 `[]byte` 就是一个 byte 切片（关于切片的更多信息，查看： [Slices: usage and internals](https://blog.golang.org/go-slices-usage-and-internals)）。 Body 是元素是一个 `[]byte` 而不是 `string`， 是因为将要使用的 `io` 库需要这个类型，可以在下面看到。
 
-Page 结构中体现了如何将页面数据保存到内存中，但是如果是持久存储怎么办？我们可以在 Page 上创建一个 save 方法来解决：  
+Page 结构中体现了如何将页面数据保存到内存中，但是如果是持久存储怎么办？我们可以在 Page 上创建一个 save 方法来解决：
 
 ```go
 func (p *Page) save() error {
@@ -236,8 +237,8 @@ func main() {
 使用编辑器打开 test.txt 文件，写入 `Hello world` 。
 
 ```bash
-$ go build wiki.go
-$ ./wiki
+go build wiki.go
+./wiki
 ```
 
 （如果你使用的是 Windows ，你必须输入 `wiki` ，去掉 `./` 去执行这个程序）
@@ -278,7 +279,6 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 ```
 
 这个函数可以很好的工作，但是所有硬编码的 HTML 都是非常丑的，所以还有更好的办法。
-
 
 ## html template 包
 
@@ -601,7 +601,7 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 
 `makeHandler` 返回的闭包是一个包含 `http.ResponseWriter` 和 `http.Request` 参数的函数（ 换句话说，一个 `http.HandlerFunc` ）。这个闭包从请求路径中提取 title ，并且通过 title 验证器 `regexp` 验证它。 如果标题是无效的，一个 `error` 将通过 `http.NotFound` 函数写入到 `ResponseWriter` 。如果 title 是有效的，它包裹的 handler 函数 fn 将传入 ResponseWriter, Request, 和 title 参数被调用。
 
-现在，在 main 函数中，我们可以在 `handler` 被注册到 `http` 包之前，通过 `makeHandler` 来包装它们： 
+现在，在 main 函数中，我们可以在 `handler` 被注册到 `http` 包之前，通过 `makeHandler` 来包装它们：
 
 ```go
 func main() {

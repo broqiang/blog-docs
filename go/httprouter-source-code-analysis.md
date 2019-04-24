@@ -1,11 +1,12 @@
 +++
 title = "httprouter 源码分析"
 author = "BroQiang"
-github_url = "https://broqiang.com/broqiang"
+home_page = "https://broqiang.com"
 head_img = ""
-created_at = "2019-04-17 01:05:48"
-created_at = "2019-04-17 01:05:48"
+created_at = 2019-04-17T01:05:48
+updated_at = 2019-04-17T01:05:48
 tags = ["go", "源码分析"]
+decription = ""
 +++
 
 关于 [httprouter](https://github.com/julienschmidt/httprouter) 本身就不过多说了，可以直接去查看源码及 README 。
@@ -45,16 +46,15 @@ func main() {
 }
 ```
 
-可以看到，这个 demo 还是比较简单的， 主要就做了几件事： 
+可以看到，这个 demo 还是比较简单的， 主要就做了几件事：
 
 - 定义了两个业务处理的函数（虽然只做了简单的字符串输出）。
 
-- 初始化路由， httprouter.New() 
+- 初始化路由， httprouter.New()
 
 - 将上面的两个函数注册到路由中
 
 - 使用 httprouter 的 handler 启动服务
-
 
 下面就从 main 函数开始看，通过 `New()` 函数初始化了一下 httprouter ，然后调用了两次 GET 方法，分别传入了 Index 和 Hello 的业务处理函数。
 
@@ -83,7 +83,7 @@ type Router struct {
     trees map[string]*node
 
     // 这个参数是否自动处理当访问路径最后带的 /，一般为 true 就行。
-    // 例如： 当访问 /foo/ 时， 此时没有定义 /foo/ 这个路由，但是定义了 
+    // 例如： 当访问 /foo/ 时， 此时没有定义 /foo/ 这个路由，但是定义了
     // /foo 这个路由，就对自动将 /foo/ 重定向到 /foo (GET 请求
     // 是 http 301 重定向，其他方式的请求是 http 307 重定向）。
     RedirectTrailingSlash bool
@@ -94,7 +94,7 @@ type Router struct {
     // 这个路由上 ( GET 是 301， 其他是 307 ) 。
     RedirectFixedPath bool
 
-    // 用来配合下面的 MethodNotAllowed 参数。 
+    // 用来配合下面的 MethodNotAllowed 参数。
     HandleMethodNotAllowed bool
 
     // 如果为 true ，会自动回复 OPTIONS 方式的请求。
@@ -111,7 +111,7 @@ type Router struct {
     // 在 handler 被调用以前，为允许请求的方法设置 "Allow" header 。
     MethodNotAllowed http.Handler
 
-    // 当出现 panic 的时候，通过这个函数来恢复。会返回一个错误码为 500 的 http error 
+    // 当出现 panic 的时候，通过这个函数来恢复。会返回一个错误码为 500 的 http error
     // (Internal Server Error) ，这个函数是用来保证出现 painc 服务器不会崩溃。
     PanicHandler func(http.ResponseWriter, *http.Request, interface{})
 }
@@ -129,7 +129,7 @@ var _ http.Handler = New()
 
 到这里，我们就可以看到了， Router 也是基于 http.Handler 做的实现，如果要实现 http.Handler 接口，就必须实现 `ServeHTTP(w http.ResponseWriter, req *http.Request)` 这个方法，下面就可以去追踪下 ServerHTTP 都做了什么。
 
-## ServerHTTP 
+## ServerHTTP
 
 这个代码比较长，就将分析的步骤写在注释中了，关于基数树放在最后说明。
 
@@ -138,7 +138,7 @@ var _ http.Handler = New()
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
     // 在最开始，就做了 panic 的处理，这样可以保证业务代码出现问题的时候，不会导致服务器崩溃
     // 这里就是简单的在浏览器返回一个 500 错误，如果想在 panic 的时候自己处理
-    // 只需要将 r.PanicHandler = func(http.ResponseWriter, *http.Request, interface{}) 
+    // 只需要将 r.PanicHandler = func(http.ResponseWriter, *http.Request, interface{})
     // 重写， 添加上自己的处理逻辑即可。
     if r.PanicHandler != nil {
         defer r.recv(w, req)
@@ -159,7 +159,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
             // 处理完成后 return ，此次生命周期就结束了
             return
 
-            // 当没有找到的时候，并且请求的方法不是 CONNECT 并且 路径不是 / 的时候 
+            // 当没有找到的时候，并且请求的方法不是 CONNECT 并且 路径不是 / 的时候
         } else if req.Method != "CONNECT" && path != "/" {
             // 这里就要做重定向处理， 默认是 301
             code := 301 // Permanent redirect, request with GET method
@@ -168,14 +168,14 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
             if req.Method != "GET" {
                 // Temporary redirect, request with same method
                 // As of Go 1.3, Go does not support status code 308.
-                // 看上面的注释的意思貌似是作者想使用 308（永久重定向），但是 Go 1.3 
+                // 看上面的注释的意思貌似是作者想使用 308（永久重定向），但是 Go 1.3
                 // 不支持 308 ，所以使用了一个临时重定向。 为什么不能用 301 呢？
                 // 因为 308 和 307 不允许请求方法从 POST 更改为 GET
                 code = 307
             }
 
-            // tsr 返回值是一个 bool 值，用来判断是否需要重定向, getValue 返回来的 
-            // RedirectTrailingSlash 这个就是初始化时候定义的，只有为 true 才会处理 
+            // tsr 返回值是一个 bool 值，用来判断是否需要重定向, getValue 返回来的
+            // RedirectTrailingSlash 这个就是初始化时候定义的，只有为 true 才会处理
             if tsr && r.RedirectTrailingSlash {
                 // 如果 path 的长度大于 1，只有大于 1 才会出现这种情况，如 p/，path/
                 // 并且路径的最后是 / 的时候将最后的 / 去除
@@ -198,7 +198,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
             // 需要在初始化的时候定义 RedirectFixedPath 为 true，允许修复
             if r.RedirectFixedPath {
                 // 这里就是在处理 Router 里面说的，将路径通过 CleanPath 方法去除多余的部分
-                // 并且 RedirectTrailingSlash 为 ture 的时候，去匹配路由 
+                // 并且 RedirectTrailingSlash 为 ture 的时候，去匹配路由
                 // 比如： 定义了一个路由 /foo , 但实际访问的是 ////FOO ，就会被重定向到 /foo
                 fixedPath, found := root.findCaseInsensitivePath(
                     CleanPath(path),
@@ -224,7 +224,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
             return
         }
     } else {
-        // 如果不是 OPTIONS 或者 不允许 OPTIONS 时 
+        // 如果不是 OPTIONS 或者 不允许 OPTIONS 时
         // Handle 405
         // 如果初始化的时候 HandleMethodNotAllowed 为 ture
         if r.HandleMethodNotAllowed {
@@ -312,7 +312,7 @@ func (r *Router) DELETE(path string, handle Handle) {
 // 通过给定的路径和方法，注册一个新的 handle 请求，对于 GET, POST, PUT, PATCH 和 DELETE
 // 请求，相对应的方法，直接调用这个方法也是可以的，只需要多传入第一个参数即可。
 // 官方给的建议是： 在批量加载或使用非标准的自定义方法时候使用。
-// 
+//
 // 它有三个参数，第一个是请求方式（GET，POST……）， 第二个是路由的路径， 前两个参数都是字符串类型
 // 第三个参数就是我们要注册的函数，比如上面的 Index 函数，可以追踪一下，在这个文件的最上面
 // 有 Handle 的定义，它是一个函数类型，只要和这个 Handle 的签名一直的都可以作为参数
@@ -393,15 +393,15 @@ func (ps Params) ByName(name string) string {
 // 这个是用来定义静态文件的，比如 js, css, 图片等
 // path 是定义的 URL 路径，必须是 /*filepath 这种格式
 // root 对应的是系统中的目录或文件系统，因为这个函数其实是使用的 http 标准库中的 FileServer
-// 来实现的文件服务，所以 root 参数要传入一个 http.FileSystem 类型的参数，可以通过 
+// 来实现的文件服务，所以 root 参数要传入一个 http.FileSystem 类型的参数，可以通过
 // http.Dir("/etc/...") 这种方式转换一下，因为 Dir 实现了 http.FileSystem 接口，
-// 直接使用它来转换就行了。 
+// 直接使用它来转换就行了。
 //
 // 示例： 比如定义了路由 router.ServeFiles("/public/*filepath", http.Dir("/etc"))
 // 此时访问 localhost:8080/public/passwd ， 就可以将 /etc/passwd 文件的内容显示了
 func (r *Router) ServeFiles(path string, root http.FileSystem) {
     // 就是因为这三行代码的处理，是验证路径是否 /xxx/*filepath 这种结构定义
-    // 因为标准库要求必须这样设置路径，这里也就这样了, 
+    // 因为标准库要求必须这样设置路径，这里也就这样了,
     // 个人还真没想到为什么要这样处理，应该有什么意义吧
     if len(path) < 10 || path[len(path)-10:] != "/*filepath" {
         panic("path must end with /*filepath in path '" + path + "'")
@@ -456,18 +456,17 @@ GET("/contact/", func6)
 
 * *<数字> 代表一个 handler 函数的内存地址（指针）
 
-* search 和 support 拥有共同的父节点 s ，并且 s 是没有对应的 handle 的， 只有叶子节点（就是最后一个节点，下面没有子节点的节点）才会注册 handler 。 
+* search 和 support 拥有共同的父节点 s ，并且 s 是没有对应的 handle 的， 只有叶子节点（就是最后一个节点，下面没有子节点的节点）才会注册 handler 。
 
 * 从根开始，一直到叶子节点，才是路由的实际路径。
 
 * 路由搜索的顺序是从上向下，从左到右的顺序，为了快速找到尽可能多的路由，包含子节点越多的节点，优先级越高。
 
-
-### node 
+### node
 
 大概了解下，开始读代码，详细去看看。一样是先找一个入口，上面在分析的时候已经留了好几个坑， 可以慢慢填了。
 
-首先在 router.go 中找到 
+首先在 router.go 中找到
 
 ```go
 ...
@@ -486,7 +485,7 @@ type Router struct {
 type node struct {
     // 当前节点的 URL 路径
     // 如上面图中的例子的首先这里是一个 /
-    // 然后 children 中会有 path 为 [s, blog ...] 等的节点 
+    // 然后 children 中会有 path 为 [s, blog ...] 等的节点
     // 然后 s 还有 children node [earch,upport] 等，就不再说明了
     path      string
 
@@ -505,7 +504,7 @@ type node struct {
     maxParams uint8
 
     // 和下面的 children 对应，保留的子节点的第一个字符
-    // 如上图中的 s 节点，这里保存的就是 eu （earch 和 upport）的首字母 
+    // 如上图中的 s 节点，这里保存的就是 eu （earch 和 upport）的首字母
     indices   string
 
     // 当前节点的所有直接子节点
@@ -575,7 +574,7 @@ func (n *node) addRoute(path string, handle Handle) {
                     indices:   n.indices,
                     children:  n.children,
                     handle:    n.handle,
-                    // 权重 -1 
+                    // 权重 -1
                     priority:  n.priority - 1,
                 }
 
@@ -613,12 +612,12 @@ func (n *node) addRoute(path string, handle Handle) {
 
                 // 如果当前路径有参数
                 // 如果进入了上面 if i < len(n.path) 这个条件，这里就不会成立了
-                // 因为上一个 if 中将 n.wildChild 重新定义成了 false 
-                // 什么情况会进入到这里呢 ? 
+                // 因为上一个 if 中将 n.wildChild 重新定义成了 false
+                // 什么情况会进入到这里呢 ?
                 // 1. 上面的 if 不生效，也就是说不会有新的公共前缀， n.path = i 的时候
                 // 2. 当前节点的 path 是一个参数节点就是像这种的 :post
                 // 就是定义路由时候是这种形式的： blog/:post/update
-                // 
+                //
                 if n.wildChild {
                     // 如果进入到了这里，证明这是一个参数节点，类似 :post 这种
                     // 不会这个节点进行处理，直接将它的子节点赋值给当前节点
@@ -638,10 +637,10 @@ func (n *node) addRoute(path string, handle Handle) {
                     numParams--
 
                     // 检查通配符是否匹配
-                    // 这里的 path 已经变成了去除了公共前缀的后面部分，比如 
+                    // 这里的 path 已经变成了去除了公共前缀的后面部分，比如
                     // :post/update ， 就是 /update
                     // 这里的 n 也已经是 :post 这种的下一级的节点，比如 / 或者 /u 等等
-                    // 如果添加的节点的 path >= 当前节点的 path && 
+                    // 如果添加的节点的 path >= 当前节点的 path &&
                     // 当前节点的 path 长度和添加节点的前面相同数量的字符是相等的， &&
                     if len(path) >= len(n.path) && n.path == path[:len(n.path)] &&
                         // 简单更长的通配符，
@@ -649,12 +648,12 @@ func (n *node) addRoute(path string, handle Handle) {
                         // 这里也只有 len(n.path) == len(path) 才会成立，
                         // 就是当前节点的 path 和 添加节点的 path 相等 ||
                         // 添加节点的 path 减去当前节点的 path 之后是 /
-                        // 例如： n.path = name, path = name 或 
+                        // 例如： n.path = name, path = name 或
                         // n.path = name, path = name/ 这两种情况
                         (len(n.path) >= len(path) || path[len(n.path)] == '/') {
 
                         // 跳出当前循环，进入下一次循环
-                        // 再次循环的时候 
+                        // 再次循环的时候
                         // 1. if i < len(n.path) 这里就不会再进入了，现在 i == len(n.path)
                         // 2. if n.wildChild 也不会进入了，当前节点已经在上次循环的时候改为 children[0]
                         continue walk
@@ -663,7 +662,7 @@ func (n *node) addRoute(path string, handle Handle) {
                         // 代表通配符冲突了，什么意思呢？
                         // 简单的说就是通配符部分只允许定义相同的或者 / 结尾的
                         // 例如：blog/:post/update，再定义一个路由 blog/:postabc/add，
-                        // 这个时候就会冲突了，是不被允许的，blog 后面只可以定义 
+                        // 这个时候就会冲突了，是不被允许的，blog 后面只可以定义
                         // :post 或 :post/ 这种，同一个位置不允许使用多种通配符
                         // 这里的处理是直接 panic 了，如果想要支持，可以尝试重写下面部分代码
 
@@ -675,7 +674,7 @@ func (n *node) addRoute(path string, handle Handle) {
                         if n.nType == catchAll {
                             pathSeg = path
                         } else {
-                            // 如果不是，将 path 做字符串分割 
+                            // 如果不是，将 path 做字符串分割
                             // 这个是通过 / 分割，最多分成两个部分,然后取第一部分的值
                             // 例如： path = "name/hello/world"
                             // 分割两部分就是 name 和 hello/world , pathSeg = name
@@ -688,7 +687,7 @@ func (n *node) addRoute(path string, handle Handle) {
                         // 这时的 prefix = "/blog/:post"
                         prefix := fullPath[:strings.Index(fullPath, pathSeg)] + n.path
 
-                        // 最终的提示信息就会生成类似这种： 
+                        // 最终的提示信息就会生成类似这种：
                         // panic: ':postnew' in new path '/blog/:postnew/update/' \
                         // conflicts with existing wildcard ':post' in existing \
                         // prefix '/blog/:post'
@@ -738,7 +737,7 @@ func (n *node) addRoute(path string, handle Handle) {
                         // 当前节点是 s , 包含两个节点 earch 和 upport
                         // 这时 indices 就会有字母 e 和 u 并且是和子节点 earch 和 uppor 相对应
                         // 新添加的节点如果叫 subject ， 与当前节点匹配去除公共前缀 s 后， 就变成了
-                        // ubject ，这时 n = upport 这个节点了，path = ubject 
+                        // ubject ，这时 n = upport 这个节点了，path = ubject
                         // 下一次循环就拿 upport 这个 n 和 ubject 这个 path 去开始下次的匹配
                         continue walk
                     }
@@ -964,9 +963,9 @@ func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle
             // （上面的注释说明的位置是 else 上面，不是为下面的 else 做的注释）
 
 
-        // 进入到 else ，就是包含 * 号的路由了 
+        // 进入到 else ，就是包含 * 号的路由了
         } else { // catchAll
-            // 这里的意思是， * 匹配的路径只允许定义在路由的最后一部分 
+            // 这里的意思是， * 匹配的路径只允许定义在路由的最后一部分
             // 比如 : /hello/*world 是允许的， /hello/*world/more 这种就会 painc
             // 这种路径就是会将 hello/ 后面的所有内容变成 world 的变量
             // 比如地址栏输入： /hello/one/two/more ，获取到的参数 world = one/twq/more
@@ -1038,7 +1037,7 @@ func (n *node) insertChild(numParams uint8, path, fullPath string, handle Handle
 // 参数： 字符串类型的路径
 // 返回值：
 // Handle 通过路径找到的 handler ， 如果没有找到，会返回一个 nil
-// Params 如果路由注册的是参数路由，这里会将参数及值返回，是一个 Param 结构的 slice 
+// Params 如果路由注册的是参数路由，这里会将参数及值返回，是一个 Param 结构的 slice
 // tsr 是一个 boolean 类型的标志，告诉调用者这个路由是否可以被重定向，配合 Router
 // 里面的 RedirectTrailingSlash 属性
 func (n *node) getValue(path string) (handle Handle, p Params, tsr bool) {

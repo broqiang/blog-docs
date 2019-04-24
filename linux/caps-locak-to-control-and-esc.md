@@ -1,11 +1,12 @@
 +++
 title = "将 Caps Lock 改建成智慧的 Control 和 Esc"
 author = "BroQiang"
-github_url = "https://broqiang.com/broqiang"
+home_page = "https://broqiang.com"
 head_img = ""
-created_at = "2019-04-22 16:51:48"
-updated_at = "2019-04-22 16:51:54"
-tags = ["Linux", "PHP"]
+created_at = 2019-04-22T16:51:54
+updated_at = 2019-04-22T16:51:54
+tags = ["Linux"]
+description = "在些代码的时候，有没有感觉左手小拇指有些疼，有没有发现大小写锁定键这么好的位置从来没有使用过，可以将这个优势按键替换成单击触发 ESC， 和其他按键组合就变成 Ctrl 键。"
 +++
 
 参考： [Smart Caps Lock: Remap to Control AND Escape](https://gist.github.com/tanyuan/55bca522bf50363ae4573d4bdcf06e2e)
