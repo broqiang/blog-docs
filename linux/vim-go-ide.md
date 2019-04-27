@@ -4,7 +4,7 @@ author = "BroQiang"
 home_page = "https://broqiang.com"
 head_img = ""
 created_at = 2019-04-23T00:01:16
-updated_at = 2019-04-28T00:01:16
+updated_at = 2019-04-23T00:01:16
 tags = ["linux", "go", "vim", "ide"]
 description = "通过对 vim 的配置，可以让 vim 像 ide 一样飞起来。"
 +++
