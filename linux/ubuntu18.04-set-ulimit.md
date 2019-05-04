@@ -53,7 +53,7 @@ root       soft    nproc     unlimited
 
 参考： [https://askubuntu.com/questions/1049058/how-to-increase-max-open-files-limit-on-ubuntu-18-04](https://askubuntu.com/questions/1049058/how-to-increase-max-open-files-limit-on-ubuntu-18-04)
 
-- 修改 limit.conf 文件
+### 修改 limit.conf 文件
 
 写入下面内容
 
@@ -77,7 +77,7 @@ bro hard     nofile         65535
 > 注意，这里是每一个用户都要配置，网上有人说只有 root 用户才需要单独写出来，不过我试的时候发现，
 bro （普通用户） 没有写在这里的时候也没生效。
 
-- 添加 common-session
+### 添加 common-session
 
 在 `/etc/pam.d/common-session` 和 `/etc/pam.d/common-session` 文件中，都添加下面内容：
 
@@ -85,7 +85,7 @@ bro （普通用户） 没有写在这里的时候也没生效。
 session required pam_limits.so
 ```
 
-- 修改 /etc/systemd/system.conf 文件
+### 修改 /etc/systemd/system.conf 文件
 
 如果不修改这个文件的话，重启后当前登录的 bro 用户不会超过这个限制（影响的是登录桌面的用户）。
 
