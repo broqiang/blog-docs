@@ -32,7 +32,7 @@ tags = ["go", "算法", "数组"]
 
 解释：
 
-![示例](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/10/12/diagonal_traverse.png)
+![diagonal_traverse](https://i.loli.net/2019/05/13/5cd939d2f2fdb95404.png)
 
 ### 说明
 
