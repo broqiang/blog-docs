@@ -113,7 +113,7 @@ func reverseWords(s string) string {
 }
 ```
 
-## 解法 3 使用 slice 保存结果
+### 解法 3 使用 slice 保存结果
 
 思路和 2 没什么区别， 只是换成用一个 slice 保存分割的值， 最后再合并结果
 
@@ -146,7 +146,7 @@ func reverseWords(s string) string {
 
 经测试， 速度和消耗都比前两种要小了
 
-## 解法 4 使用 buffer
+### 解法 4 使用 buffer
 
 思路和 2 、 3 一样，只是将分割结果保存到 buffer 中， 最后再返回。
 
