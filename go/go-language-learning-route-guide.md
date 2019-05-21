@@ -3,8 +3,8 @@ title = "Go 语言学习路线指南"
 author = "BroQiang"
 github_url = "https://broqiang.com"
 head_img = ""
-created_at = 2019-05-21T01:15:57
-updated_at = 2018-05-28T01:09:25
+created_at = 2018-05-28T01:09:25
+updated_at = 2019-05-21T01:15:57
 description = "记录了个人的一个学习经验，不知道如何开始学习的同学可以借鉴一下，抛砖引玉。"
 tags = ["go"]
 +++
