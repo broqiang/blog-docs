@@ -33,20 +33,6 @@ root:x:0:0:root:/root:/bin/bash
 
 这里只列出了我觉得会常用到的选项， 更多的选项可以通过 help 查看
 
-### -E, --extended-regexp
-
-PATTERN 支持扩展的正则表达式
-
-示例：
-
-```bash
-$ grep -E "root|nobody" /etc/passwd
-root:x:0:0:root:/root:/bin/bash
-nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-```
-
-可以查询出 root 或 nobody 所在行的数据。
-
 ### -f, --file=FILE
 
 PATTERN 是从文件中读取的
@@ -100,6 +86,15 @@ bro:x:1000:1000:BroQiang,,,:/home/bro:/bin/bash
 ```
 
 可以看到， 只查询出了不包含 root 的行
+
+### -o, --only-matching
+
+只显示匹配的结果
+
+```bash
+$ grep -o root.*root /etc/passwd
+root:x:0:0:root:/root
+```
 
 ### 匹配的结果包含上下文所在行
 
@@ -288,4 +283,49 @@ root:x:0:0:root:/root:/bin/bash
     proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
     rtkit:x:109:114:RealtimeKit,,,:/proc:/usr/sbin/nologin
     bro:x:1000:1000:BroQiang,,,:/home/bro:/bin/bash
+    ```
+
+## egrep 扩展正则表达式
+
+可以直接通过 egrep 命令来搜索匹配，默认就是支持扩展正则表达式， 也可以通过 `grep -E` 参数，
+使用 grep 命令来支持扩展正则表达式。
+
+### egrep 匹配的字符
+
+egrep 字符匹配和 grep 是类似的,基本相同。 直接看前面的 grep 的匹配字符即可。
+
+### egrep 次数匹配
+
+egrep 的次数匹配和 grep 也是类似的， 不过可以省略掉啰嗦的转译字符。
+
++ `*` 前面的字符重复任意次数， 0 次或 多次
+
++ `?` 前面的字符重复 0 次或 1 次
+
++ `+` 前面的字符重复 1 次或 多次
+
++ `{m}` 前面的字符重复的次数， m 是正整数
+
++ `{m,n}` 之前前面字符最少重复 m 次， 最多重复 n 次
+
++ 行首、行尾、词首、词尾 和 grep 是相同的， 见上方
+
++ `()` 分组的用法也和 grep 相同， 只是不需要转译字符 `\` 了
+
++ `|` 或的意思
+
+    查询出 root 或 nobody 所在行。
+
+    ```bash
+    $ grep -E "root|nobody" /etc/passwd
+    root:x:0:0:root:/root:/bin/bash
+    nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+    ```
+
+    查询出 ma 后面是 n 或 il 开头的行。
+
+    ```bash
+    $ grep -E "^ma(n|il)" /etc/passwd
+    man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+    mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
     ```
