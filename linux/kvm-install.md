@@ -1,5 +1,5 @@
 +++
-title = "标题"
+title = "KVM 安装"
 author = "BroQiang"
 github_url = "https://broqiang.com"
 head_img = ""
