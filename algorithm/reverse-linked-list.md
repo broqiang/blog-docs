@@ -138,7 +138,7 @@ func reverseList(head *ListNode) *ListNode {
 
 c 代码
 
-```c
+```C
 struct ListNode* reverseList(struct ListNode* head){
     // 方法 2， 递归 1
     if (!head || !head->next) {
@@ -184,7 +184,7 @@ func reverseList(head *ListNode) *ListNode {
 每次传入上一个节点和当前节点， 更容易理解一些。 c 的执行完和上面的方法没上面区别， 不过 go
 通过这个方式， 执行时间减少了一半（leetcode 结果中的时间）。
 
-```c
+```C
 struct ListNode* reverse(struct ListNode* prev, struct ListNode* curr) {
     if (!curr) {
         return prev;
