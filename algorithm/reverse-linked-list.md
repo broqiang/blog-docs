@@ -224,5 +224,5 @@ func reverse(prev, curr *ListNode) *ListNode {
 }
 ```
 
-本文来自 [字符串反转](https://broqiang.com/posts/algorithm/reverse-linked-list)
+本文来自 [字符串反转](https://broqiang.com/posts/reverse-linked-list)
 随意转载，带上这个尾巴就可以了。
