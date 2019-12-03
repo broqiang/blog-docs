@@ -310,6 +310,28 @@ fcitx &
 点击左下角的 + 号， 找到 Sogou Pinyin ， 添加即可。 一般保留一个英文输入法和一个 Sougou
 输入法， 使用 Ctrl + 空格就可以切换了。
 
+### DPI 设置
+
+如果是高分屏， 默认显示会非常的小， 设置下 dpi （类似 Windows 下的缩放功能）即可。
+
+参考： [https://wiki.archlinux.org/index.php/HiDPI#X_Resources](https://wiki.archlinux.org/index.php/HiDPI#X_Resources)
+
+`vim ~/.Xresources`  (~/.Xresources 如果不存在就新建一个)
+
+写入下面内容， 然后重新登录桌面即可生效
+
+```bash
+Xft.dpi: 130
+Xft.autohint: 0
+Xft.lcdfilter:  lcddefault
+Xft.hintstyle:  hintfull
+Xft.hinting: 1
+Xft.antialias: 1
+Xft.rgba: rgb
+```
+
+上面的 `Xft.dpi: 130` 根据自己的分辨率来设置
+
 ## 完成
 
 到这里基本就完成了， 为了虚拟机的性能， 没有配置过多花哨的东西， 可以满足基本的开发就可以了。
