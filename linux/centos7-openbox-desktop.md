@@ -224,6 +224,10 @@ vim ~/.config/openbox/rc.xml
 <keybind key="W-E">
     <action name="execute"><execute>thunar</execute></action>
 </keybind>
+# Alt + 回车可以叫窗口最大化和还原
+<keybind key="A-Return">
+    <action name="ToggleMaximizeFull"/>
+</keybind>
 ```
 
 删除另外一个已经存在的 W-E ， 这个默认的貌似是个 kde 的文件管理器， 包有点多， 就直接把他删了，
