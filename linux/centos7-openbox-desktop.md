@@ -216,17 +216,43 @@ vim ~/.config/openbox/rc.xml
 
 ```bash
 <keybind key="A-F2">
-    <action name="execute"><execute>gmrun</execute></action>
+  <action name="execute">
+    <execute>gmrun</execute>
+  </action>
 </keybind>
 <keybind key="C-A-T">
-    <action name="execute"><execute>xfce4-terminal</execute></action>
+  <action name="execute">
+    <execute>xfce4-terminal</execute>
+  </action>
 </keybind>
 <keybind key="W-E">
-    <action name="execute"><execute>thunar</execute></action>
+  <action name="execute">
+    <execute>thunar</execute>
+  </action>
 </keybind>
-# Alt + 回车可以叫窗口最大化和还原
 <keybind key="A-Return">
-    <action name="ToggleMaximizeFull"/>
+  <action name="ToggleDecorations"/>
+  <action name="ToggleMaximizeFull"/>
+</keybind>
+<keybind key="W-Up">
+  <action name="GrowToEdge">
+    <direction>north</direction>
+  </action>
+</keybind>
+<keybind key="W-Down">
+  <action name="GrowToEdge">
+    <direction>south</direction>
+  </action>
+</keybind>
+<keybind key="W-Left">
+  <action name="GrowToEdge">
+    <direction>west</direction>
+  </action>
+</keybind>
+<keybind key="W-Right">
+  <action name="GrowToEdge">
+    <direction>east</direction>
+  </action>
 </keybind>
 ```
 
