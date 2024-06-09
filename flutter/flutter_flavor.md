@@ -13,6 +13,31 @@ tags = ["flutter"]
 
 [参考](https://dwirandyh.medium.com/create-build-flavor-in-flutter-application-ios-android-fb35a81a9fac)
 
+
+<!-- TOC tocDepth:2..3 chapterDepth:2..6 -->
+
+- [Flutter 中配置](#flutter-中配置)
+    - [创建 `lib/flavors/flavor_config.dart` 文件](#创建-libflavorsflavor_configdart-文件)
+    - [修改原来的 `lib/main.dart` 文件](#修改原来的-libmaindart-文件)
+    - [为每一个环境创建一个入口文件](#为每一个环境创建一个入口文件)
+- [配置 iOS 端 Flavor](#配置-ios-端-flavor)
+    - [复制 Target](#复制-target)
+    - [重命名 Scheme](#重命名-scheme)
+    - [添加 Build Mode 配置](#添加-build-mode-配置)
+    - [为 Dev 环境配置 App ID](#为-dev-环境配置-app-id)
+    - [修改 App Icon](#修改-app-icon)
+    - [修改 App 名字](#修改-app-名字)
+    - [iOS 完成](#ios-完成)
+- [配置 Android 端 Flavor](#配置-android-端-flavor)
+    - [build.gradle 中添加 Flavor 配置](#buildgradle-中添加-flavor-配置)
+    - [修改 App 名称](#修改-app-名称)
+    - [完成](#完成)
+- [编写 MakeFile](#编写-makefile)
+- [编写 VsCode launch.json](#编写-vscode-launchjson)
+
+<!-- /TOC -->
+
+
 ## Flutter 中配置
 
 ### 创建 `lib/flavors/flavor_config.dart` 文件
