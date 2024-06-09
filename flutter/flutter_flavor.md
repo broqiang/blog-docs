@@ -17,8 +17,8 @@ tags = ["flutter"]
 <!-- TOC tocDepth:2..3 chapterDepth:2..6 -->
 
 - [Flutter 中配置](#flutter-中配置)
-    - [创建 `lib/flavors/flavor_config.dart` 文件](#创建-libflavorsflavor_configdart-文件)
-    - [修改原来的 `lib/main.dart` 文件](#修改原来的-libmaindart-文件)
+    - [创建 lib/flavors/flavor_config.dart 文件](#创建-libflavorsflavor_configdart-文件)
+    - [修改原来的 lib/main.dart 文件](#修改原来的-libmaindart-文件)
     - [为每一个环境创建一个入口文件](#为每一个环境创建一个入口文件)
 - [配置 iOS 端 Flavor](#配置-ios-端-flavor)
     - [复制 Target](#复制-target)
@@ -40,7 +40,7 @@ tags = ["flutter"]
 
 ## Flutter 中配置
 
-### 创建 `lib/flavors/flavor_config.dart` 文件
+### 创建 lib/flavors/flavor_config.dart 文件
 
 > 文件内容只作为参考，按照实际的用到的去修改即可
 
@@ -69,7 +69,7 @@ class FlavorConfig {
 }
 ```
 
-### 修改原来的 `lib/main.dart` 文件
+### 修改原来的 lib/main.dart 文件
 
 为了防止文件名称混淆，这里直接将原来的 `lib/main.dart` 文件放在 `lib/flavors` 目录下，并且改名字为 `mainCommon.dart`
 
