@@ -163,13 +163,14 @@ void main() {
 打开 `ios/Runner.xcworkspace` ， 然后点击左侧的 `Runner` Target， 选择 `Duplicate` ，复制一份新的，
 修改名字为 `RunnerDev`， 原来的 `Runner` 保留，作为 prod 环境。
 
-![flutter_flavor_2024-06-09-21-42-23](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-21-42-23.png)
+![flutter_flavor_2024-06-10-09-14-43](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-14-43.gif)
 
 ### 重命名 Scheme
 
 点击最顶部的 `Runner` 选择 `Manage Schemes`， 然后将 `Runner copy` 重命名为 `dev`。
 
-![flutter_flavor_2024-06-09-21-46-43](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-21-46-43.png)
+![flutter_flavor_2024-06-10-09-15-58](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-15-58.gif)
+
 
 将默认的 `Runner` 重命名为 `prod`， 现在就有两个 scheme 了， `dev` 和 `prod`.
 
@@ -181,7 +182,7 @@ void main() {
 然后改名为`Debug-dev, Release-dev, Profile-dev`， 作为 dev 环境；
 再将原来的三个文件改名为 `Debug-prod, Release-prod, Profile-prod`，作为 prod 环境。
 
-![flutter_flavor_2024-06-09-22-06-59](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-22-06-59.png)
+![flutter_flavor_2024-06-10-09-19-30](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-19-30.gif)
 
 完成后是这样的
 
@@ -193,7 +194,7 @@ prod 就用原来的就好，如果有需要再修改,可以再原来的 identif
 
 点中左侧的 `RunnerDev` 然后选中 `Build Settings`， 然后在上面的 `Filter` 处搜索 `bundle id`， 将搜索出来的 `Product Bundle Identifier` 的值添加 `.dev`。
 
-![flutter_flavor_2024-06-09-22-17-16](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-22-17-16.png)
+![flutter_flavor_2024-06-10-09-21-50](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-21-50.gif)
 
 ### 修改 App Icon
 
@@ -204,7 +205,7 @@ prod 就用原来的就好，如果有需要再修改,可以再原来的 identif
 
 找到 RunnerDev， 选中 Build Settings， 然后在上面的 `Filter` 处搜索 `primary App Icon`， 将值改成 AppIconDev。
 
-![flutter_flavor_2024-06-09-23-05-49](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-23-05-49.png)
+![flutter_flavor_2024-06-10-09-23-30](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-23-30.gif)
 
 ### 修改 App 名字
 
