@@ -13,12 +13,6 @@ tags = ["flutter"]
 
 [参考](https://dwirandyh.medium.com/create-build-flavor-in-flutter-application-ios-android-fb35a81a9fac)
 
-## 创建项目
-
-```bash
-flutter create --org cn.shijianpuzi --platforms android,ios tsapp
-```
-
 ## Flutter 中配置
 
 ### 创建 lib/flavors/flavor_config.dart 文件
