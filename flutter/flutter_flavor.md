@@ -13,30 +13,11 @@ tags = ["flutter"]
 
 [参考](https://dwirandyh.medium.com/create-build-flavor-in-flutter-application-ios-android-fb35a81a9fac)
 
+## 创建项目
 
-<!-- TOC tocDepth:2..3 chapterDepth:2..6 -->
-
-- [Flutter 中配置](#flutter-中配置)
-    - [创建 lib/flavors/flavor_config.dart 文件](#创建-libflavorsflavor_configdart-文件)
-    - [修改原来的 lib/main.dart 文件](#修改原来的-libmaindart-文件)
-    - [为每一个环境创建一个入口文件](#为每一个环境创建一个入口文件)
-- [配置 iOS 端 Flavor](#配置-ios-端-flavor)
-    - [复制 Target](#复制-target)
-    - [重命名 Scheme](#重命名-scheme)
-    - [添加 Build Mode 配置](#添加-build-mode-配置)
-    - [为 Dev 环境配置 App ID](#为-dev-环境配置-app-id)
-    - [修改 App Icon](#修改-app-icon)
-    - [修改 App 名字](#修改-app-名字)
-    - [iOS 完成](#ios-完成)
-- [配置 Android 端 Flavor](#配置-android-端-flavor)
-    - [build.gradle 中添加 Flavor 配置](#buildgradle-中添加-flavor-配置)
-    - [修改 App 名称](#修改-app-名称)
-    - [完成](#完成)
-- [编写 MakeFile](#编写-makefile)
-- [编写 VsCode launch.json](#编写-vscode-launchjson)
-
-<!-- /TOC -->
-
+```bash
+flutter create --org cn.shijianpuzi --platforms android,ios tsapp
+```
 
 ## Flutter 中配置
 
@@ -158,58 +139,68 @@ void main() {
 用 xcode 打开文件， vscode 上是右键点击个目录下的 `ios` 目录， 然后选择 `Open in Xcode` 选项， 
 注意：`下面操作都是 xcode 中的`。
 
-### 复制 Target
+### 配置 Runner Configurations
 
-打开 `ios/Runner.xcworkspace` ， 然后点击左侧的 `Runner` Target， 选择 `Duplicate` ，复制一份新的，
-修改名字为 `RunnerDev`， 原来的 `Runner` 保留，作为 prod 环境。
+选中 Runner -> PROJECT -> Configurations ， 在这个区域点击 + 号，将原本的 Debug、Release、Profile 复制一份。
 
-![flutter_flavor_2024-06-10-09-14-43](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-14-43.gif)
+![flutter_flavor_2024-06-12-09-16-16](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-16-16.png)
 
-### 重命名 Scheme
+将刚刚复制的三个 Debug copy、Release copy、Profile copy 改名为 Debug-dev、Release-dev、Profile-dev。
 
-点击最顶部的 `Runner` 选择 `Manage Schemes`， 然后将 `Runner copy` 重命名为 `dev`。
+再将原本的 Debug、Release、Profile 改名为 Debug-prod、Release-prod、Profile-prod。
 
-![flutter_flavor_2024-06-10-09-15-58](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-15-58.gif)
+![flutter_flavor_2024-06-12-09-35-32](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-35-32.png)
+
+### 配置 Scheme
+
+![flutter_flavor_2024-06-12-09-22-01](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-22-01.png)
+
+![flutter_flavor_2024-06-12-09-25-24](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-25-24.png)
+
+这里名字是叫的 dev， 名字要和 Flutter 里面配置的 Flavor 一致，防止使用时候出错， 然后再将原本存在的 Runner ， 改名为 prod
+
+![flutter_flavor_2024-06-12-09-28-05](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-28-05.png)
+
+然后将上面两个 Scheme 配置
+
+![flutter_flavor_2024-06-12-09-30-36](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-30-36.png)
 
 
-将默认的 `Runner` 重命名为 `prod`， 现在就有两个 scheme 了， `dev` 和 `prod`.
+![flutter_flavor_2024-06-12-09-42-16](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-42-16.png)
 
-![flutter_flavor_2024-06-09-21-48-13](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-21-48-13.png)
+prod 环境的是重命名的，应该会自动匹配上，也可以检查一下，是否正确
 
-### 添加 Build Mode 配置
+![flutter_flavor_2024-06-12-09-44-09](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-44-09.png)
 
-点击左侧 PROJECT 下的 Runner， 然后将现在的 `Debug, Release，Profile` 3个文件全都复制一份（点击列表下面+号复制），
-然后改名为`Debug-dev, Release-dev, Profile-dev`， 作为 dev 环境；
-再将原来的三个文件改名为 `Debug-prod, Release-prod, Profile-prod`，作为 prod 环境。
+### 配置 Bundle Identifier
 
-![flutter_flavor_2024-06-10-09-19-30](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-19-30.gif)
+打开 Runner -> Build Settings ， 搜索 Bundle Identifier， 将搜索出来的 `Product Bundle Identifier` 中 -dev 的值添加 `.dev`
 
-完成后是这样的
-
-![flutter_flavor_2024-06-09-22-07-15](https://image.broqiang.com/vscode/flutter_flavor_2024-06-09-22-07-15.png)
-
-### 为 Dev 环境配置 App ID
-
-prod 就用原来的就好，如果有需要再修改,可以再原来的 identifier 后面加上 `.dev` 来给开发环境使用
-
-点中左侧的 `RunnerDev` 然后选中 `Build Settings`， 然后在上面的 `Filter` 处搜索 `bundle id`， 将搜索出来的 `Product Bundle Identifier` 的值添加 `.dev`。
-
-![flutter_flavor_2024-06-10-09-21-50](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-21-50.gif)
-
-### 修改 App Icon
-
-准备好图标文件，如果没有可以在 [https://www.appicon.co](https://www.appicon.co) 制作
-
-选中左侧目录的 `Assets.xcassets`， 然后将准备好的图标复制进去(如果是 [https://www.appicon.co](https://www.appicon.co) 生成的图标，
-将 `AppIcon.appiconset` 整个目录拉过来即可)，改名为 AppIconDev。
-
-找到 RunnerDev， 选中 Build Settings， 然后在上面的 `Filter` 处搜索 `primary App Icon`， 将值改成 AppIconDev。
-
-![flutter_flavor_2024-06-10-09-23-30](https://image.broqiang.com/vscode/flutter_flavor_2024-06-10-09-23-30.gif)
+![flutter_flavor_2024-06-12-09-51-33](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-51-33.png)
 
 ### 修改 App 名字
 
-在 指定的 Runner Target 中，修改 `Display Name` 为想要的名称即可。
+打开 Runner -> Build Settings 搜索 `Product Name`， 分别修改对应的 App 名字。
+
+![flutter_flavor_2024-06-12-09-57-22](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-09-57-22.png)
+
+这里的 `我的App` 就是安装后在手机桌面上显示的应用名称，按照实际名称修改，最好通过名称来区分不同环境， 比如在后面加个 `Dev`， 当然不改也不会有影响。
+
+然后在 `info.plist` 中修改 Bundle display name 为 $(PRODUCT_NAME) 变量
+
+![flutter_flavor_2024-06-12-10-04-05](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-10-04-05.png)
+
+### 修改 App Icon
+
+可以将准备好图标文件导入，如果没有，如果没有可以在 [https://www.appicon.co](https://www.appicon.co) 制作， 这里分别起名为 `AppIconDev`、`AppIconProd`， 名字随意，后面配置的时候能够对应上即可。
+
+如果不需要区分图标， 可以直接替换原本的 AppIcon 即可，后面步骤就不需要了。
+
+![flutter_flavor_2024-06-12-10-13-33](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-10-13-33.png)
+
+图标导入成功后 在 `Runner` -> `Build Settings` 中搜索 `Primary App Icon` 将搜索出来的 `AppIconDev` 替换为 `AppIconProd`。
+
+![flutter_flavor_2024-06-12-10-19-43](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-10-19-43.png)
 
 ### iOS 完成
 
@@ -271,6 +262,15 @@ android {
         android:label="@string/app_name"
         ......
 ```
+
+### 修改 App Icon
+
+将准备好的图标或者 [https://www.appicon.co](https://www.appicon.co) 制作的图标分别导入到 `android/app/src/dev/res` 
+和 `android/app/src/prod/res` 中， 如果不想要区分，直接放到 `android/app/src/main/res` 中即可。两个环境都可以使用一套图标。 
+
+![flutter_flavor_2024-06-12-10-30-45](https://image.broqiang.com/mdblog/flutter_flavor_2024-06-12-10-30-45.png)
+
+
 
 ### 完成
 
