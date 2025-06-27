@@ -1,5 +1,3 @@
-
-```yaml
 ---
 title: "flutter flavor 配置"
 author: "BroQiang"
@@ -9,6 +7,6 @@ updated_at: 2024-06-10T01:53:53
 description: "flutter flavor 配置"
 tags: ["flutter"]
 ---
-```
+
 
 # Hello World
